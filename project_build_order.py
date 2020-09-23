@@ -17,6 +17,9 @@ class Project:
     def increaseDependencies(self):
         self.dependencies += 1
 
+    def decrementDependencies(self):
+        self.dependencies -= 1
+
     def __repr__(self):
         return json.dumps({
             'root' : self.val,
@@ -30,13 +33,31 @@ class Project:
             'dependencies' : self.dependencies
         })  
 
+def addNonDependent(order, offset, projects):
+    for p in projects:
+        if p.dependencies == 0:
+            order[offset] = p
+            offset += 1
+    return offset, order
+        
 def build_project(projects):
     # keep 2 pointers
     # 1 pointer to keep track of where to put the data and
     # another pointer to point to from where to start processing
-    un_processed = 0
-    build_order = []
-    for 
+    order = [None]*len(projects)
+    end = 0
+    to_be_processed = 0
+    end, order = addNonDependent(order, end, projects)
+    while to_be_processed < end:
+        current_project = order[to_be_processed]
+        if current_project is None:
+            return None
+        neighbours = current_project.neighbours
+        for neighbour in neighbours:
+            neighbour.decrementDependencies()
+        end, order = addNonDependent(order, end, neighbours)
+        to_be_processed += 1
+    print(order)
 
 
 def get_or_create_project(project_name):
@@ -52,6 +73,7 @@ def main(projects, dependencies):
         to_node = get_or_create_project(dependency[1])
         from_node.add_dependency(to_node)
     pprint(projects_map)
+    build_project(projects_map.values())
 
 nodes = ['a', 'b', 'c', 'd', 'e', 'f']
 dependencies = [('a', 'd'), ('f', 'b'), ('b', 'd'), ('f', 'a'), ('d', 'c')]

@@ -4,12 +4,13 @@ class ListNode(object):
     def __init__(self, val):
         super().__init__()
         self.val = val
-        self.net = None
+        self.next = None
 
 class Node(object):
     def __init__(self, val):
         super().__init__()
         self.val = val
+        self.parent = None
         self.right = None
         self.left = None
     def __repr__(self):
@@ -21,16 +22,18 @@ class BinaryTree(object):
         self.root = self.build_from_array(array)
 
     def build_from_array(self, array):
-        def build_array_util(array, root_index):
+        def build_array_util(array, root_index, parent):
             if root_index >= len(array) or array[root_index] is None:
                 return None
             node = Node(array[root_index])
-            node.left = build_array_util(array, 2*root_index + 1)
-            node.right = build_array_util(array, 2*root_index + 2)
+            node.left = build_array_util(array, 2*root_index + 1, node)
+            node.right = build_array_util(array, 2*root_index + 2, node)
+            node.parent = parent
             return node
+
         if len(array) == 0:
             return
-        return build_array_util(array, 0)
+        return build_array_util(array, 0, None)
 
     def inorder(self):
         """
@@ -195,10 +198,10 @@ array = [1, 2, 3, 4, 5, 6, 7]
 my_bst = BinaryTree(array)
 print("Binary tree created")
 my_bst.inorder()
-l = my_bst.create_linked_list(my_bst.root)
-while l:
-    print(l.val)
-    l = l.next
+# l = my_bst.create_linked_list(my_bst.root)
+# while l:
+#     print(l.val)
+#     l = l.next
 # print(my_bst.isSymetryRecursive(my_bst.root))
 # my_bst.preorder()
 # my_bst.postorder()
