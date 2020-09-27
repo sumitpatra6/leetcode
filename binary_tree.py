@@ -189,6 +189,15 @@ class BinaryTree(object):
                 q.append(current.right)
         return dummy_node.next
     
+    def find_node(self, root, val):
+        """
+        Finds and returns the node
+        """
+        if root is None or root.val == val:
+            return root
+        return self.find_node(root.left, val) or self.find_node(root.right, val)
+            
+    
 
 
 
