@@ -13,6 +13,7 @@ def is_under_attack(i, j):
             if k+l == i+j or k -l == i - j:
                 if board[k][l] == 1:
                     return False
+        
     return False
 
 def back_track_nqueen(row=0, count=0):
